@@ -281,7 +281,7 @@ weather_df %>%
 
 ```{r}
 weather_df %>% 
-  ggplot (aes(x = tmin, y = tmax,color = name)) +
+  ggplot(aes(x = tmin, y = tmax,color = name)) +
   geom_point(alpha = .5) +
   labs(
     title = "Temperature plot",
@@ -293,6 +293,43 @@ weather_df %>%
     name = "Location",
     discrete = TRUE)
 ```
+## themes
 
+shift the legend
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax,color = name)) +
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature plot",
+    x = "minimum daily temperature(C)",
+    y = "maxmium daily temperature(C)",
+    caption = "Data from......"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE) +
+  theme(legend.position = "bottom")
+```
 
+change the overal theme
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax,color = name)) +
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature plot",
+    x = "minimum daily temperature(C)",
+    y = "maxmium daily temperature(C)",
+    caption = "Data from......"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+  ##theme_bw()
+  ##theme_classic()
+```
 
