@@ -1,12 +1,13 @@
 ---
 title: "viz_i"
-output:github_document
+output: github_document
 date: "2022-09-28"
 ---
 
 ```{r setup}
 library(tidyverse)
 library(ggridges)
+library(patchwork)
 ```
 ## load the weather data
 
@@ -188,9 +189,55 @@ weather_df %>%
   geom_density_ridges()
 ```
 
+## save and embed
+
+let's save a scatterplot
+
+```{r}
+weather_plot = 
+weather_df%>%
+  ggplot(aes(x = tmin,y = tmax, color = name)) +
+  geom_point(alpha = .5)
+
+ggsave("./results/weather_plot.pdf",weather_plot, width = 8, height = 5)
+```
+
+what about embedding
+
+```{r,fig.width=6, fig.height=3}
+weather_plot
+```
+
+embed at different size.
 
 
- 
+```{r, fig.width=12, fig.height=6}
+weather_plot
+```
+
+```{r}
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax,color = name)) +
+  geom_point(alpha = .5)
+```
+
+##labels
+
+```{r}
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax,color = name)) +
+  geom_point(alpha = .5) +
+  labs(
+    title = "Temperature plot",
+    x = "minimum daily temperature(C)",
+    y = "maxmium daily temperature(C)",
+    caption = "Data from......"
+  )
+```
+
+
+
+
 
 
 
