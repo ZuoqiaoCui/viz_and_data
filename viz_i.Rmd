@@ -461,6 +461,37 @@ weather_df %>%
     n_days = n_distinct(date))
 ```
 
+## 2*2 table
+
+```{r}
+weather_df %>% 
+  filter(name != "Waikiki_HA") %>% 
+  mutate(
+    cold = case_when(
+      tmax < 5 ~ "cold",
+      tmax >= 5 ~ "not cold",
+      TRUE     ~ ""
+    ) 
+  ) %>% 
+   group_by(name,cold) %>% 
+      summarise(count = n())
+```
+
+```{r}
+weather_df %>% 
+  filter(name != "Waikiki_HA") %>% 
+  mutate(
+    cold = case_when(
+      tmax < 5 ~ "cold",
+      tmax >= 5 ~ "not cold",
+      TRUE     ~ ""
+    ) 
+  ) %>% 
+  janitor::tabyl(name,cold)
+```
+
+
+
 
 
 
