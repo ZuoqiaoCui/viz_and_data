@@ -402,7 +402,7 @@ reorder: reorder according to the mean of tmax(default)
 weather_df %>%
 mutate(name = forcats::fct_reorder(name, tmax)) %>% 
 ggplot(aes(x = name, y = tmax)) + 
-geom_boxplot()
+geom_boxplot() +
 geom_violin(aes(fill = name), color = "blue", alpha = .5) + 
 theme(legend.position = "bottom")
 ```
@@ -441,6 +441,7 @@ we can use 'count'
 
 ```{r}
 weather_df %>% 
+  ##count(name) 直接count计数
   count(name,month,name = "n_obs")
 ```
 
@@ -458,7 +459,8 @@ weather_df %>%
   group_by(month) %>% 
   summarise(
     n_obs = n(),
-    n_days = n_distinct(date))
+    n_day = n_distinct(date)
+    )
 ```
 
 ## 2*2 table
@@ -488,6 +490,64 @@ weather_df %>%
     ) 
   ) %>% 
   janitor::tabyl(name,cold)
+```
+## general summaries
+
+If you want to summarize multiple columns using the same summary, the across function is helpful.
+
+```{r}
+weather_df %>%
+  group_by(name, month) %>%
+  summarize(across(tmin:prcp, mean))
+```
+
+
+
+```{r}
+weather_df %>%
+  group_by(month) %>%
+  summarize(
+    mean_tmax = mean(tmax,na.rm = TRUE),
+     mean_prec = mean(prcp, na.rm = TRUE),
+    median_tmax = median(tmax,na.rm = TRUE),
+    sd_tmax = sd(tmax,na.rm = TRUE)
+    )
+```
+
+DATA FRAME
+
+```{r}
+weather_df %>%
+  group_by(name,month) %>%
+  summarize(
+    mean_tmax = mean(tmax,na.rm = TRUE),
+     mean_prec = mean(prcp, na.rm = TRUE),
+    median_tmax = median(tmax,na.rm = TRUE),
+    sd_tmax = sd(tmax,na.rm = TRUE)
+    ) %>% 
+  ggplot(aes(x = month,y = mean_tmax,color = name)) +
+  geom_point() +
+  geom_line()
+```
+
+```{r}
+weather_df %>%
+  group_by(name, month) %>%
+  summarize(mean_tmax = mean(tmax)) %>% 
+  pivot_wider(
+    names_from = name,
+    values_from = mean_tmax) %>% 
+  knitr::kable(digits = 1) ##fomated document
+```
+
+```{r}
+weather_df %>%
+  group_by(name) %>%
+  mutate(
+    mean_tmax = mean(tmax, na.rm = TRUE),
+    centered_tmax = tmax - mean_tmax) %>% 
+  ggplot(aes(x = date, y = centered_tmax, color = name)) + 
+    geom_point() 
 ```
 
 
